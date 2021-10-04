@@ -1,11 +1,11 @@
-// const createError = require("http-errors")
 const { NotFound, InternalServerError } = require('http-errors')
 
-const contacstOperations = require('../../model/contacts')
+const { Contact } = require('../../models')
 
 const getById = async (req, res, next) => {
   const { contactId } = req.params
-  const contactData = await contacstOperations.getContactById(contactId)
+
+  const contactData = await Contact.findOne({ _id: contactId })
 
   if (contactData === undefined) throw new NotFound(`Can't find contact with id ${contactId}`)
 
