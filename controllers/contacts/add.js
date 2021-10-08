@@ -1,11 +1,10 @@
-// const createError = require("http-errors")
 const { InternalServerError } = require('http-errors')
-const contacstOperations = require('../../model/contacts')
+const { Contact } = require('../../models')
 
 const add = async (req, res, next) => {
-  const contactData = await contacstOperations.addContact(req.body)
+  const contactData = await Contact.create(req.body)
 
-  if (!contactData) throw new InternalServerError('File input / output error')
+  if (!contactData) throw new InternalServerError('Server error')
 
   res.status(201).json({
     status: 'Contact added',

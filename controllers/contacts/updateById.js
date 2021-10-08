@@ -1,18 +1,14 @@
-// const createError = require("http-errors")
-// const { BadRequest, NotFound, InternalServerError } = require('http-errors')
-const { NotFound, InternalServerError } = require('http-errors')
+const { NotFound } = require('http-errors')
 
-const contacstOperations = require('../../model/contacts')
+const { Contact } = require('../../models')
 
 const updateById = async (req, res, next) => {
   const { contactId } = req.params
 
-  // if (!(req.body.name || req.body.email || req.body.phone)) throw new BadRequest('Missing fields to update')
+  // const contactData = await Contact.findByIdAndUpdate({_id: contactId}, req.body, { new: true })
+  const contactData = await Contact.findByIdAndUpdate(contactId, req.body, { new: true })
 
-  const contactData = await contacstOperations.updateContact(contactId, req.body)
-
-  if (contactData === undefined) throw new NotFound(`Can't find contact with id ${contactId}`)
-  if (!contactData) throw new InternalServerError('File input / output error')
+  if (!contactData) throw new NotFound(`Can't find contact with id ${contactId}`)
 
   res.status(200).json({
     status: 'Contact updated',

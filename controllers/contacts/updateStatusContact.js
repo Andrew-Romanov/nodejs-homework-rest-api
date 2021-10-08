@@ -2,16 +2,15 @@ const { NotFound } = require('http-errors')
 
 const { Contact } = require('../../models')
 
-const getById = async (req, res, next) => {
+const updateStatusContact = async (req, res, next) => {
   const { contactId } = req.params
 
-  // const contactData = await Contact.findOne({ _id: contactId }, '_id name email phone favorite')
-  const contactData = await Contact.findById(contactId, '_id name email phone favorite')
+  const contactData = await Contact.findByIdAndUpdate(contactId, req.body, { new: true })
 
   if (!contactData) throw new NotFound(`Can't find contact with id ${contactId}`)
 
   res.status(200).json({
-    status: 'Contact found',
+    status: 'Contact updated',
     code: 200,
     data: {
       contactData
@@ -20,5 +19,5 @@ const getById = async (req, res, next) => {
 }
 
 module.exports = {
-  getById
+  updateStatusContact
 }

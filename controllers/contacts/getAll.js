@@ -1,10 +1,9 @@
-// const createError = require("http-errors")
 const { InternalServerError } = require('http-errors')
 
-const contacstOperations = require('../../model/contacts')
+const { Contact } = require('../../models')
 
 const getAll = async (req, res, next) => {
-  const contactsData = await contacstOperations.listContacts()
+  const contactsData = await Contact.find({}, '_id name email phone favorite')
 
   if (!contactsData) throw new InternalServerError("Can't read data from file")
 
