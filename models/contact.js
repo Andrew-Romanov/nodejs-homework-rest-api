@@ -16,7 +16,9 @@ const contactSchema = Schema({
     type: Boolean,
     default: false,
   },
-})
+// })
+// Turn off version field and turn on timestamps instead
+}, { versionKey: false, timestamps: true })
 
 const Contact = model('contact', contactSchema)
 

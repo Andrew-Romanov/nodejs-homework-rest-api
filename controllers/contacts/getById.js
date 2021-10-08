@@ -1,15 +1,14 @@
-const { NotFound, InternalServerError } = require('http-errors')
+const { NotFound } = require('http-errors')
 
 const { Contact } = require('../../models')
 
 const getById = async (req, res, next) => {
   const { contactId } = req.params
 
-  const contactData = await Contact.findOne({ _id: contactId })
+  // const contactData = await Contact.findOne({ _id: contactId }, '_id name email phone favorite')
+  const contactData = await Contact.findById(contactId, '_id name email phone favorite')
 
-  if (contactData === undefined) throw new NotFound(`Can't find contact with id ${contactId}`)
-
-  if (!contactData) throw new InternalServerError('File input / output error')
+  if (!contactData) throw new NotFound(`Can't find contact with id ${contactId}`)
 
   res.status(200).json({
     status: 'Contact found',
