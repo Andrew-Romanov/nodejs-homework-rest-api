@@ -3,16 +3,26 @@ const { InternalServerError } = require('http-errors')
 const { Contact } = require('../../models')
 
 const getAll = async (req, res, next) => {
-  let { page = 1, limit = 20 } = req.query
+  let { page = 1, limit = 20, favorite = false } = req.query
+  let contactsData
 
   page = parseInt(page)
   limit = parseInt(limit)
+  favorite = JSON.parse(favorite)
 
-  const contactsData = await Contact
-    .find({ owner: req.user._id },
-      '_id name email phone favorite owner',
-      { skip: (page - 1) * limit, limit: limit })
-    .populate('owner', 'email subscription')
+  if (favorite === true) {
+    contactsData = await Contact
+      .find({ owner: req.user._id, favorite: true },
+        '_id name email phone favorite owner',
+        { skip: (page - 1) * limit, limit: limit })
+      .populate('owner', 'email subscription')
+  } else if (favorite === false) {
+    contactsData = await Contact
+      .find({ owner: req.user._id },
+        '_id name email phone favorite owner',
+        { skip: (page - 1) * limit, limit: limit })
+      .populate('owner', 'email subscription')
+  }
 
   if (!contactsData) throw new InternalServerError('Server error')
 
