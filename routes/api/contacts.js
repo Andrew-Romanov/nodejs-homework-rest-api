@@ -2,21 +2,22 @@ const express = require('express')
 
 const { controllerWrapper } = require('../../mildlewares/controllerWrapper')
 const { validation } = require('../../mildlewares/validation')
+const { authentication } = require('../../mildlewares/authentication')
 const { joiStrictSchema, joiOptionalSchema, joiStatusSchema } = require('../../models/contact')
 const controllers = require('../../controllers/contacts')
 
 const router = express.Router()
 
-router.get('/', controllerWrapper(controllers.getAll))
+router.get('/', authentication, controllerWrapper(controllers.getAll))
 
-router.get('/:contactId', controllerWrapper(controllers.getById))
+router.get('/:contactId', authentication, controllerWrapper(controllers.getById))
 
-router.post('/', validation(joiStrictSchema), controllerWrapper(controllers.add))
+router.post('/', authentication, validation(joiStrictSchema), controllerWrapper(controllers.add))
 
-router.delete('/:contactId', controllerWrapper(controllers.deleteById))
+router.delete('/:contactId', authentication, controllerWrapper(controllers.deleteById))
 
-router.patch('/:contactId', validation(joiOptionalSchema), controllerWrapper(controllers.updateById))
+router.patch('/:contactId', authentication, validation(joiOptionalSchema), controllerWrapper(controllers.updateById))
 
-router.patch('/:contactId/favorite', validation(joiStatusSchema), controllerWrapper(controllers.updateStatusContact))
+router.patch('/:contactId/favorite', authentication, validation(joiStatusSchema), controllerWrapper(controllers.updateStatusContact))
 
 module.exports = router
