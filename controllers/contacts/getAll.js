@@ -3,9 +3,28 @@ const { InternalServerError } = require('http-errors')
 const { Contact } = require('../../models')
 
 const getAll = async (req, res, next) => {
-  const contactsData = await Contact.find({}, '_id name email phone favorite')
+  let { page = 1, limit = 20, favorite = false } = req.query
+  let contactsData
 
-  if (!contactsData) throw new InternalServerError("Can't read data from file")
+  page = parseInt(page)
+  limit = parseInt(limit)
+  favorite = JSON.parse(favorite)
+
+  if (favorite === true) {
+    contactsData = await Contact
+      .find({ owner: req.user._id, favorite: true },
+        '_id name email phone favorite owner',
+        { skip: (page - 1) * limit, limit: limit })
+      .populate('owner', 'email subscription')
+  } else if (favorite === false) {
+    contactsData = await Contact
+      .find({ owner: req.user._id },
+        '_id name email phone favorite owner',
+        { skip: (page - 1) * limit, limit: limit })
+      .populate('owner', 'email subscription')
+  }
+
+  if (!contactsData) throw new InternalServerError('Server error')
 
   res.status(200).json({
     status: 'Contacts received',
@@ -16,6 +35,4 @@ const getAll = async (req, res, next) => {
   })
 }
 
-module.exports = {
-  getAll
-}
+module.exports = getAll

@@ -5,7 +5,7 @@ const { Contact } = require('../../models')
 const deleteById = async (req, res, next) => {
   const { contactId } = req.params
 
-  const result = await Contact.findByIdAndRemove({ _id: contactId })
+  const result = await Contact.findByIdAndRemove({ _id: contactId, owner: req.user._id })
 
   if (!result) throw new NotFound(`Can't find contact with id ${contactId}`)
 
@@ -15,6 +15,4 @@ const deleteById = async (req, res, next) => {
   })
 }
 
-module.exports = {
-  deleteById
-}
+module.exports = deleteById

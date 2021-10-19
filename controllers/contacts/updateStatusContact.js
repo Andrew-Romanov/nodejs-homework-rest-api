@@ -5,7 +5,9 @@ const { Contact } = require('../../models')
 const updateStatusContact = async (req, res, next) => {
   const { contactId } = req.params
 
-  const contactData = await Contact.findByIdAndUpdate(contactId, req.body, { new: true })
+  const contactData = await Contact
+    .findOneAndUpdate({ _id: contactId, owner: req.user._id }, req.body, { new: true })
+    .populate('owner', 'email subscription')
 
   if (!contactData) throw new NotFound(`Can't find contact with id ${contactId}`)
 
@@ -18,6 +20,4 @@ const updateStatusContact = async (req, res, next) => {
   })
 }
 
-module.exports = {
-  updateStatusContact
-}
+module.exports = updateStatusContact

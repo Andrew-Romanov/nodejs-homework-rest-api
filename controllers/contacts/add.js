@@ -2,7 +2,8 @@ const { InternalServerError } = require('http-errors')
 const { Contact } = require('../../models')
 
 const add = async (req, res, next) => {
-  const contactData = await Contact.create(req.body)
+  const contactData = await Contact
+    .create({ ...req.body, owner: req.user._id })
 
   if (!contactData) throw new InternalServerError('Server error')
 
@@ -15,6 +16,4 @@ const add = async (req, res, next) => {
   })
 }
 
-module.exports = {
-  add
-}
+module.exports = add
