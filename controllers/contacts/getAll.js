@@ -15,13 +15,13 @@ const getAll = async (req, res, next) => {
       .find({ owner: req.user._id, favorite: true },
         '_id name email phone favorite owner',
         { skip: (page - 1) * limit, limit: limit })
-      .populate('owner', 'email subscription')
+      .populate('owner', 'email subscription avatarURL')
   } else if (favorite === false) {
     contactsData = await Contact
       .find({ owner: req.user._id },
         '_id name email phone favorite owner',
         { skip: (page - 1) * limit, limit: limit })
-      .populate('owner', 'email subscription')
+      .populate('owner', 'email subscription avatarURL')
   }
 
   if (!contactsData) throw new InternalServerError('Server error')

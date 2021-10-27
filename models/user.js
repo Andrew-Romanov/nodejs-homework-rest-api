@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose')
 const Joi = require('joi')
 const bcrypt = require('bcryptjs')
+const gravatar = require('gravatar')
 
 const userSchema = Schema({
   password: {
@@ -21,6 +22,10 @@ const userSchema = Schema({
     type: String,
     default: null,
   },
+  avatarURL: {
+    type: String,
+    default: null,
+  }
 }, { versionKey: false, timestamps: true })
 
 userSchema.methods.setPassword = function (password) {
@@ -29,6 +34,10 @@ userSchema.methods.setPassword = function (password) {
 
 userSchema.methods.comparePassword = function (password) {
   return bcrypt.compareSync(password, this.password)
+}
+
+userSchema.methods.setAvatarURL = function (email) {
+  this.avatarURL = gravatar.url(email, { size: '250', default: 'wavatar', rating: 'g', protocol: 'http' })
 }
 
 const User = model('user', userSchema)

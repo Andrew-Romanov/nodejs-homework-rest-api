@@ -7,7 +7,7 @@ const updateById = async (req, res, next) => {
 
   const contactData = await Contact
     .findOneAndUpdate({ _id: contactId, owner: req.user._id }, req.body, { new: true })
-    .populate('owner', 'email subscription')
+    .populate('owner', 'email subscription avatarURL')
 
   if (!contactData) throw new NotFound(`Can't find contact with id ${contactId}`)
 

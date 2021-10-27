@@ -15,7 +15,8 @@ const subscription = async (req, res, next) => {
     data: {
       user: {
         email: userData.email,
-        subscription: userData.subscription
+        subscription: userData.subscription,
+        avatarURL: userData.avatarURL
       }
     }
   })

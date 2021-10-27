@@ -1,4 +1,4 @@
-const authentication = require('../authentication/authentication')
+const authentication = require('./authentication')
 
 module.exports = {
   authentication
