@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose')
 const Joi = require('joi')
 const bcrypt = require('bcryptjs')
 const gravatar = require('gravatar')
+const { nanoid } = require('nanoid')
 
 const userSchema = Schema({
   password: {
@@ -25,6 +26,14 @@ const userSchema = Schema({
   avatarURL: {
     type: String,
     default: null,
+  },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    required: [true, 'Verify token is required'],
   }
 }, { versionKey: false, timestamps: true })
 
@@ -38,6 +47,10 @@ userSchema.methods.comparePassword = function (password) {
 
 userSchema.methods.setAvatarURL = function (email) {
   this.avatarURL = gravatar.url(email, { size: '250', default: 'wavatar', rating: 'g', protocol: 'http' })
+}
+
+userSchema.methods.setVerificationToken = function () {
+  this.verificationToken = nanoid()
 }
 
 const User = model('user', userSchema)
