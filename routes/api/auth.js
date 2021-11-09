@@ -22,4 +22,8 @@ router.patch('/subscription', authentication, validation(joiSubscriptionSchema),
 
 router.patch('/avatars', authentication, upload.single('avatar'), controllerWrapper(controllers.avatars))
 
+router.get('/verify/:verificationToken', controllerWrapper(controllers.verify))
+
+router.post('/verify', controllerWrapper(controllers.sendAgain))
+
 module.exports = router
